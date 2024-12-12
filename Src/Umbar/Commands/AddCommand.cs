@@ -2,10 +2,11 @@ using Umbar.Models;
 using CLI.Common.Helpers;
 using Spectre.Console;
 using Spectre.Console.Cli;
+using System.ComponentModel;
 
 namespace Umbar.Commands;
 
-public sealed class AddCommand : AsyncCommand<DefaultSettings>
+[Description("Adds apps to the config.json")]
 {
     public override async Task<int> ExecuteAsync(CommandContext context, DefaultSettings settings)
     {

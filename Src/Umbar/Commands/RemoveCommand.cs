@@ -1,11 +1,11 @@
-using Umbar.Models;
+using System.ComponentModel;
 using CLI.Common.Helpers;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace Umbar.Commands;
 
-public sealed class RemoveCommand : AsyncCommand<DefaultSettings>
+[Description("Removes one or more apps from the config.json")]
 {
     public override async Task<int> ExecuteAsync(CommandContext context, DefaultSettings settings)
     {

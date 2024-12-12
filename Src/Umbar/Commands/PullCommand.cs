@@ -3,10 +3,11 @@ using Umbar.Models;
 using CLI.Common.Helpers;
 using Spectre.Console;
 using Spectre.Console.Cli;
+using System.ComponentModel;
 
 namespace Umbar.Commands;
 
-public sealed class PullCommand : AsyncCommand<DefaultSettings>
+[Description("Pulls images from one or more apps from the config.json")]
 {
     public override async Task<int> ExecuteAsync(CommandContext context, DefaultSettings settings)
     {

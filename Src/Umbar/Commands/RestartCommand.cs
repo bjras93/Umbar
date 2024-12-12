@@ -3,10 +3,11 @@ using Umbar.Models;
 using CLI.Common.Helpers;
 using Spectre.Console;
 using Spectre.Console.Cli;
+using System.ComponentModel;
 
 namespace Umbar.Commands;
 
-public sealed class RestartCommand : AsyncCommand<DefaultSettings>
+[Description("Restarts apps from the config.json")]
 {
     public override async Task<int> ExecuteAsync(CommandContext context, DefaultSettings settings)
     {
