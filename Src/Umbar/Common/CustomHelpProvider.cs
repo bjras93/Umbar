@@ -3,7 +3,7 @@ using Spectre.Console.Cli;
 using Spectre.Console.Cli.Help;
 using Spectre.Console.Rendering;
 
-namespace Umbar;
+namespace Umbar.Common;
 
 public sealed class CustomHelpProvider(
     ICommandAppSettings settings) : HelpProvider(settings)

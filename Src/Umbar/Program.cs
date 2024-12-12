@@ -1,10 +1,8 @@
-﻿
-
-using System.Text.Json.Serialization;
-using Umbar;
+﻿using System.Text.Json.Serialization;
 using Umbar.Commands;
 using Umbar.Models;
 using Spectre.Console.Cli;
+using Umbar.Common;
 
 var commandApp = new CommandApp();
 
