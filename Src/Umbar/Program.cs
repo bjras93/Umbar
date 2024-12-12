@@ -13,6 +13,15 @@ commandApp.Configure(config =>
     config
         .AddCommand<AddCommand>("add");
     config
+        .AddCommand<NewCommand>("new")
+        .WithAlias("create");
+    config
+        .AddCommand<UpCommand>("up")
+        .WithAlias("start");
+    config
+    .AddCommand<DownCommand>("down")
+    .WithAlias("stop");
+    config
         .AddCommand<RemoveCommand>("remove")
         .WithAlias("rm");
     config
