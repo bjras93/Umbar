@@ -34,7 +34,7 @@ public sealed class PullCommand : AsyncCommand<PullSettings>
         }
         foreach (var app in apps)
         {
-            await ProcessHelper.RunAsync(Constants.Docker, $"compose -f {app.Path} pull");
+            await Docker.Commands.Pull(app.Path);
         }
 
         await ConfigurationManager.UpdateAsync(config);

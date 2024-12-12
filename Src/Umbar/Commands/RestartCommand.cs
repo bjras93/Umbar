@@ -28,9 +28,9 @@ public sealed class RestartCommand : AsyncCommand<RestartSettings>
             app = await config.Apps.SelectionPromptAsync(a => a.Name);
         }
         AnsiConsole.WriteLine($"Restarting {app.Name}");
-        await ProcessHelper.RunAsync(Constants.Docker, $"compose -f {app.Path} restart");
+        await Docker.Commands.Restart(app.Path);
         if (settings.Follow)
-            await ShellHelper.Start($"docker compose -f {app.Path} logs -f");
+            await Docker.Commands.Logs(app.Path);
 
         await ConfigurationManager.UpdateAsync(config);
         return 0;
