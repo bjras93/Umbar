@@ -8,6 +8,8 @@ so I decided to open-source it. Feel free to give it a try and share any feedbac
 
 Usage examples
 
+![CLI displays the commands available](Resources/cli.png)
+
 `umbar add`
 
 Adds the current folder or you can change the folder, it will identify '~' as your user home folder. It will detect if any yaml or yml files exist. If none are located the command will fail, otherwise it will be stored in the config.json for later usage.
