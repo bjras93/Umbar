@@ -17,6 +17,7 @@ Adds the current folder or you can change the folder, it will identify '~' as yo
 Removes the entry from the config.json
 
 `umbar restart`
+
 Attempts to run `docker compose restart` and `docker compose log -f` at the location specified in config.json
 
 `umbar pull` 
