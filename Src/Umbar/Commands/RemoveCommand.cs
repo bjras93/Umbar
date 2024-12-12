@@ -1,6 +1,7 @@
-using System.ComponentModel;
 using Spectre.Console;
 using Spectre.Console.Cli;
+using System.ComponentModel;
+using Umbar.Common;
 using Umbar.Helpers;
 
 namespace Umbar.Commands;
@@ -39,8 +40,14 @@ public sealed class RemoveSettings : DefaultSettings
 {
     [CommandOption("-a|--all")]
     [Description("Deletes all apps from the config.json")]
-    public bool All { get; init; }
+    public bool All
+    {
+        get; init;
+    }
     [CommandOption("-f|--force")]
     [Description("Skips confirmation prompt when deleting all")]
-    public bool Force { get; init; }
+    public bool Force
+    {
+        get; init;
+    }
 }

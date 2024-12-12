@@ -1,8 +1,9 @@
-using Umbar.Helpers;
-using Umbar.Models;
 using Spectre.Console;
 using Spectre.Console.Cli;
 using System.ComponentModel;
+using Umbar.Common;
+using Umbar.Helpers;
+using Umbar.Models;
 
 namespace Umbar.Commands;
 
@@ -58,8 +59,14 @@ public sealed class PullSettings : DefaultSettings
 {
     [CommandOption("-a|--all")]
     [Description("Marks all apps in the multi selection")]
-    public bool All { get; set; }
+    public bool All
+    {
+        get; set;
+    }
     [CommandOption("-f|--force")]
     [Description("Skips the multi selection")]
-    public bool Force { get; set; }
+    public bool Force
+    {
+        get; set;
+    }
 }

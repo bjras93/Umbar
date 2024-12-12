@@ -5,10 +5,17 @@ namespace Umbar.Helpers;
 
 public static class PromptHelper
 {
+    /// <summary>
+    /// Creates a new text prompt and shows it.
+    /// </summary>
+    /// <param name="question">The text the user is prompted with.</param>
+    /// <param name="defaultValue">The default value that will be set.</param>
+    /// <param name="allowEmpty">When true the user can just press enter without inputting anything.</param>
+    /// <returns>User input</returns>
     public static async Task<string> TextPromptAsync(
-    string question,
-    string? defaultValue = null,
-    bool allowEmpty = false
+        string question,
+        string? defaultValue = null,
+        bool allowEmpty = false
     )
     {
         var textPrompt = new TextPrompt<string>(question);

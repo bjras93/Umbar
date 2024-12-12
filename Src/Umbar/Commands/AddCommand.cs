@@ -1,9 +1,10 @@
-using Umbar.Models;
 using Spectre.Console;
 using Spectre.Console.Cli;
-using System.ComponentModel;
 using System.Collections.Concurrent;
+using System.ComponentModel;
+using Umbar.Common;
 using Umbar.Helpers;
+using Umbar.Models;
 
 namespace Umbar.Commands;
 
@@ -126,7 +127,10 @@ public sealed class AddSettings : DefaultSettings
 {
     [CommandOption("-f|--find-all")]
     [Description("Recursively looks through all subfolders to determine if any compose files exists.")]
-    public bool Find { get; init; }
+    public bool Find
+    {
+        get; init;
+    }
 
     [CommandArgument(0, "[depth]")]
     [Description("Determines the depth of folders to recursively look through, default is 3.")]

@@ -1,8 +1,9 @@
-using Umbar.Helpers;
-using Umbar.Models;
 using Spectre.Console;
 using Spectre.Console.Cli;
 using System.ComponentModel;
+using Umbar.Common;
+using Umbar.Helpers;
+using Umbar.Models;
 
 namespace Umbar.Commands;
 
@@ -39,5 +40,8 @@ public sealed class RestartSettings : DefaultSettings
 {
     [CommandOption("-f|--follow")]
     [Description("Runs the logs --follow command on docker compose after restarting app")]
-    public bool Follow { get; set; }
+    public bool Follow
+    {
+        get; set;
+    }
 }
