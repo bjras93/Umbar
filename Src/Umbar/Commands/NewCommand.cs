@@ -1,6 +1,8 @@
 using Spectre.Console.Cli;
 using System.ComponentModel;
+using Umbar.Common;
 using Umbar.Helpers;
+using Umbar.Models;
 
 namespace Umbar.Commands;
 
@@ -39,6 +41,14 @@ public sealed class NewCommand : AsyncCommand<NewSettings>
         if (settings.Start)
             await Docker.Commands.Up(Path.Combine(settings.Location, fileName));
 
+        var config = await ConfigurationManager.GetAsync();
+
+        config.Apps.Add(new App
+        {
+            Name = Path.GetFileName(settings.Location),
+            Path = Path.Combine(settings.Location, fileName)
+        });
+        await ConfigurationManager.UpdateAsync(config);
         return 0;
     }
 }

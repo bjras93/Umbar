@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using Umbar.Commands;
 using Umbar.Common;
+using Umbar.Docker.Models;
 using Umbar.Models;
 
 var commandApp = new CommandApp();
@@ -34,6 +35,7 @@ await commandApp.RunAsync(args);
 
 
 [JsonSerializable(typeof(Config))]
+[JsonSerializable(typeof(DockerService[]))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext
 {
 

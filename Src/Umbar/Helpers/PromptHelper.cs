@@ -34,6 +34,21 @@ public static class PromptHelper
         Func<T, string>? nameConverter = null)
     where T : notnull
     {
+        if (values.Count() == 1)
+        {
+            string name;
+            if (nameConverter != null)
+            {
+                name = values.Select(nameConverter).First();
+            }
+            else
+            {
+                name = values.First().ToString()!;
+            }
+
+            return await ConfirmPromptAsync($"Select {name}?") ? values.First() :
+                throw new Exception("No item selected");
+        }
         var selectionPrompt = new SelectionPrompt<T>();
 
         if (nameConverter != null)

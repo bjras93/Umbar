@@ -19,7 +19,9 @@ public sealed class UpCommand : AsyncCommand<UpSettings>
             path = config.Apps.FirstOrDefault(a => a.Name.Contains(settings.Name, StringComparison.OrdinalIgnoreCase))?.Path;
 
         if (string.IsNullOrWhiteSpace(path))
-            path = (await config.Apps.SelectionPromptAsync(c => c.Name)).Path;
+        {
+            path = (await DockerHelper.GetApp(config.Apps)).Path;
+        }
 
         await Docker.Commands.Up(path);
 
