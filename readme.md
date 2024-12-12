@@ -1,8 +1,10 @@
 # Introduction
 
-A small console app for managing docker compose instances. 
+Umbar is a small CLI tool I created to make it simpler to manage my Docker Compose services on my home server.
 
-It stores location of yaml files in the config.json file
+While it's a personal project, I thought it might be useful to others who manage Docker Compose setups, 
+so I decided to open-source it. Feel free to give it a try and share any feedback or ideas!
+
 
 Usage examples
 
@@ -25,7 +27,7 @@ Attempts to run `docker compose pull` at the location specified in config.json
 
 `dotnet publish Src/Umbar -r linux-x64 -o pub`
 
--o determines the output folder, change it to whatever suits your needs
+-o flag specifies the output folder.
 
 The '-r' specifies the runtime identifier
 an example for Windows or Mac

@@ -11,13 +11,15 @@ commandApp.Configure(config =>
     config.SetApplicationName("umbar");
     config.SetHelpProvider(new CustomHelpProvider(config.Settings));
     config
-        .AddCommand<RemoveCommand>("remove");
-    config
         .AddCommand<AddCommand>("add");
+    config
+        .AddCommand<RemoveCommand>("remove")
+        .WithAlias("rm");
     config
         .AddCommand<PullCommand>("pull");
     config
-        .AddCommand<RestartCommand>("restart");
+        .AddCommand<RestartCommand>("restart")
+        .WithAlias("reset");
 });
 await commandApp.RunAsync(args);
 
