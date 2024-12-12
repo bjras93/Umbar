@@ -43,7 +43,7 @@ namespace Umbar.Commands;
 
         var directoryName = Path.GetFileName(currentDirectory);
         directoryName = await PromptHelper.TextPromptAsync($"Would you to keep this name?", directoryName, true);
-        config.Applications.Add(new App
+        config.Apps.Add(new App
         {
             Name = directoryName,
             Path = Path.Combine(currentDirectory, dockerFile)
