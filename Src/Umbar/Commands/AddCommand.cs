@@ -8,15 +8,15 @@ using Umbar.Helpers;
 namespace Umbar.Commands;
 
 [Description("Adds apps to the config.json")]
-public sealed class AddCommand : AsyncCommand<AddCommandSettings>
+public sealed class AddCommand : AsyncCommand<AddSettings>
 {
-    public override async Task<int> ExecuteAsync(CommandContext context, AddCommandSettings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, AddSettings settings)
     {
         var config = await ConfigurationManager.GetAsync();
         int exitCode;
         if (settings.Find)
         {
-            exitCode = await FindAll(config);
+            exitCode = await FindAll(config, settings.MaxDepth);
         }
         else
         {
@@ -29,22 +29,24 @@ public sealed class AddCommand : AsyncCommand<AddCommandSettings>
     private static async Task<int> Manual(Config config)
     {
         var currentDirectory = Directory.GetCurrentDirectory();
-        currentDirectory = await PromptHelper.TextPromptAsync($"Would you like to use the current?", currentDirectory, true);
-        currentDirectory = currentDirectory.Replace("~", Environment.GetFolderPath(Environment.SpecialFolder.UserProfile));
-        var files = Directory.GetFiles(currentDirectory).Where(c =>
+        List<string> files = [];
+        while (files.Count == 0)
         {
-            var ext = Path.GetExtension(c);
-            if (ext == ".yaml" || ext == ".yml")
-            {
-                return true;
-            }
-            return false;
-        }).ToList();
+            files = Directory.GetFiles(currentDirectory).Where(c =>
+           {
+               var ext = Path.GetExtension(c);
+               if (ext == ".yaml" || ext == ".yml")
+               {
+                   return true;
+               }
+               return false;
+           }).ToList();
 
-        if (files.Count == 0)
-        {
-            AnsiConsole.WriteLine("No dockerfile found");
-            return 0;
+            if (files.Count == 0)
+            {
+                currentDirectory = await PromptHelper.TextPromptAsync($"No compose file in current folder, please insert desired folder.", currentDirectory, true);
+                currentDirectory = currentDirectory.Replace("~", Environment.GetFolderPath(Environment.SpecialFolder.UserProfile));
+            }
         }
 
         string dockerFile;
@@ -70,14 +72,16 @@ public sealed class AddCommand : AsyncCommand<AddCommandSettings>
     /// Iterates through all sub folders to find folders with yaml/yml files
     /// </summary>
     /// <returns>Exit code</returns>
-    private static async Task<int> FindAll(Config config)
+    private static async Task<int> FindAll(
+        Config config,
+        int maxDepth)
     {
         var dict = new ConcurrentDictionary<string, string>();
-        var directories = Directory.EnumerateDirectories(Directory.GetCurrentDirectory(), "*", SearchOption.AllDirectories);
+        var directories = DirectoryHelper.GetAccessibleDirectories(Directory.GetCurrentDirectory(), "*", maxDepth);
         var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount };
         await Parallel.ForEachAsync(directories, parallelOptions, async (directory, ct) =>
         {
-            var yamlFile = Directory.EnumerateFiles(directory)
+            var yamlFile = (await DirectoryHelper.GetAccessibleFiles(directory))
             .FirstOrDefault(f =>
             {
                 var ext = Path.GetExtension(f);
@@ -93,6 +97,7 @@ public sealed class AddCommand : AsyncCommand<AddCommandSettings>
                 return;
 
             dict.TryAdd(Path.GetFileName(directory), yamlFile);
+
         });
 
         var apps = dict.Select(d => new MultiSelectItem<App>
@@ -117,9 +122,13 @@ public sealed class AddCommand : AsyncCommand<AddCommandSettings>
 
 }
 
-public sealed class AddCommandSettings : DefaultSettings
+public sealed class AddSettings : DefaultSettings
 {
     [CommandOption("-f|--find-all")]
     [Description("Recursively looks through all subfolders to determine if any compose files exists.")]
     public bool Find { get; init; }
+
+    [CommandArgument(0, "[depth]")]
+    [Description("Determines the depth of folders to recursively look through, default is 3.")]
+    public int MaxDepth { get; init; } = 3;
 }

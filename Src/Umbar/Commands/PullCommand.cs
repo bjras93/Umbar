@@ -49,9 +49,9 @@ public sealed class PullCommand : AsyncCommand<PullSettings>
         AnsiConsole.WriteLine("Please select which app to pull");
         if (settings.All)
         {
-            return (await config.Apps.MultiSelectionPromptAsync(true)).ToHashSet();
+            return (await config.Apps.MultiSelectionPromptAsync(true, a => a.Name)).ToHashSet();
         }
-        return [await config.Apps.SelectionPromptAsync(a => a.Name)];
+        return (await config.Apps.MultiSelectionPromptAsync(nameConverter: a => a.Name)).ToHashSet();
     }
 }
 public sealed class PullSettings : DefaultSettings
