@@ -94,7 +94,7 @@ public sealed class AddCommand : AsyncCommand<AddSettings>
             if (yamlFile == null)
                 return;
 
-            if (await ProcessHelper.RunAsync(Constants.Docker, $"compose -f \"{yamlFile}\" config -q", true) != 0)
+            if (await Docker.Commands.Config(yamlFile, "-q") != 0)
                 return;
 
             dict.TryAdd(Path.GetFileName(directory), yamlFile);
