@@ -1,6 +1,5 @@
 using Umbar.Helpers;
 using Umbar.Models;
-using CLI.Common.Helpers;
 using Spectre.Console;
 using Spectre.Console.Cli;
 using System.ComponentModel;

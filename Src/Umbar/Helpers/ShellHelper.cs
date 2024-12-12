@@ -31,7 +31,7 @@ public static class ShellHelper
             }
         };
         scriptProcess.Start();
-        scriptProcess.WaitForExit();
+        await scriptProcess.WaitForExitAsync();
     }
     public static async Task ChangeDirectory(
         string directory)

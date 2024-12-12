@@ -1,6 +1,7 @@
 using Spectre.Console;
+using Umbar.Models;
 
-namespace CLI.Common.Helpers;
+namespace Umbar.Helpers;
 
 public static class PromptHelper
 {
@@ -32,6 +33,49 @@ public static class PromptHelper
             selectionPrompt.Converter = nameConverter;
 
         selectionPrompt.AddChoices(values);
+
+        return await selectionPrompt.ShowAsync(AnsiConsole.Console, CancellationToken.None);
+    }
+    public static async Task<IEnumerable<T>> MultiSelectionPromptAsync<T>(
+            this IEnumerable<T> values,
+            bool preselected = false,
+            Func<T, string>? nameConverter = null)
+        where T : notnull
+    {
+        var selectionPrompt = new MultiSelectionPrompt<T>();
+
+        if (nameConverter != null)
+            selectionPrompt.Converter = nameConverter;
+        if (preselected)
+        {
+            foreach (var value in values)
+            {
+                var choice = selectionPrompt.AddChoice(value);
+                choice.Select();
+            }
+        }
+        else
+        {
+            selectionPrompt.AddChoices(values);
+        }
+
+        return await selectionPrompt.ShowAsync(AnsiConsole.Console, CancellationToken.None);
+    }
+    public static async Task<IEnumerable<T>> MultiSelectionPromptAsync<T>(
+        this IEnumerable<MultiSelectItem<T>> values,
+        Func<T, string>? nameConverter = null)
+    where T : notnull
+    {
+        var selectionPrompt = new MultiSelectionPrompt<T>();
+
+        if (nameConverter != null)
+            selectionPrompt.Converter = nameConverter;
+        foreach (var value in values)
+        {
+            var choice = selectionPrompt.AddChoice(value.Data);
+            if (value.Selected)
+                choice.Select();
+        }
 
         return await selectionPrompt.ShowAsync(AnsiConsole.Console, CancellationToken.None);
     }
