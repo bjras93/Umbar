@@ -21,7 +21,17 @@ public sealed class RestartCommand : AsyncCommand<RestartSettings>
             return 0;
         }
         var currentDirectory = Directory.GetCurrentDirectory();
-        App? app = config.Apps.FirstOrDefault(a => currentDirectory.Contains(a.Name));
+
+        App? app = null;
+        if (!string.IsNullOrWhiteSpace(settings.Name))
+        {
+            app = config.Apps.FirstOrDefault(a =>
+                    a.Name.Contains(settings.Name))
+                    ?? throw new ArgumentException($"No app found with name: {settings.Name}");
+        }
+        app ??= config.Apps.FirstOrDefault(a =>
+                currentDirectory.Contains(a.Name));
+
         if (app == null)
         {
             AnsiConsole.WriteLine("Please select which app to restart");
@@ -39,9 +49,10 @@ public sealed class RestartCommand : AsyncCommand<RestartSettings>
 public sealed class RestartSettings : DefaultSettings
 {
     [CommandOption("-f|--follow")]
-    [Description("Runs the logs --follow command on docker compose after restarting app")]
-    public bool Follow
-    {
-        get; set;
-    }
+    [Description("Runs the logs --follow command on docker compose after restarting app.")]
+    public bool Follow { get; set; }
+
+    [CommandArgument(0, "[Name]")]
+    [Description("Name of the app to be restarted.")]
+    public string? Name { get; set; }
 }

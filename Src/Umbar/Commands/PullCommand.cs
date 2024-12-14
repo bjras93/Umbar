@@ -21,8 +21,18 @@ public sealed class PullCommand : AsyncCommand<PullSettings>
             return 0;
         }
         var currentDirectory = Directory.GetCurrentDirectory();
-        var directoryApp = config.Apps.FirstOrDefault(a => currentDirectory.Contains(a.Name));
-        HashSet<App>? apps = directoryApp == null ? [] : [directoryApp];
+
+        App? app = null;
+        if (!string.IsNullOrWhiteSpace(settings.Name))
+        {
+            app = config.Apps.FirstOrDefault(a =>
+                    a.Name.Contains(settings.Name))
+                    ?? throw new ArgumentException($"No app found with name: {settings.Name}");
+        }
+        app ??= config.Apps.FirstOrDefault(a =>
+                currentDirectory.Contains(a.Name));
+
+        HashSet<App>? apps = app == null ? [] : [app];
         if (apps.Count == 0 || settings.All)
         {
             apps = await Prompt(config, settings);
@@ -32,11 +42,9 @@ public sealed class PullCommand : AsyncCommand<PullSettings>
             AnsiConsole.WriteLine("No apps were added.");
             return 1;
         }
-        foreach (var app in apps)
-        {
-            await Docker.Commands.Pull(app.Path);
-        }
+        var tasks = apps.Select(a => Docker.Commands.Pull(a.Path));
 
+        await Task.WhenAll(tasks);
         await ConfigurationManager.UpdateAsync(config);
         return 0;
     }
@@ -58,15 +66,12 @@ public sealed class PullCommand : AsyncCommand<PullSettings>
 public sealed class PullSettings : DefaultSettings
 {
     [CommandOption("-a|--all")]
-    [Description("Marks all apps in the multi selection")]
-    public bool All
-    {
-        get; set;
-    }
+    [Description("Marks all apps in the multi selection.")]
+    public bool All { get; set; }
     [CommandOption("-f|--force")]
-    [Description("Skips the multi selection")]
-    public bool Force
-    {
-        get; set;
-    }
+    [Description("Skips the multi selection.")]
+    public bool Force { get; set; }
+    [CommandArgument(0, "[Name]")]
+    [Description("Name of the app to be pulled.")]
+    public string? Name { get; set; }
 }

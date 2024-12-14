@@ -25,12 +25,19 @@ public sealed class UpCommand : AsyncCommand<UpSettings>
 
         await Docker.Commands.Up(path);
 
+        if (settings.Follow)
+            await Docker.Commands.Logs(path);
+
         return 0;
     }
 }
 
 public sealed class UpSettings : DefaultSettings
 {
+    [CommandOption("-f|--follow")]
+    [Description("Runs the logs --follow command on docker compose after restarting app.")]
+    public bool Follow { get; set; }
+
     [CommandArgument(0, "[name]")]
     [Description("Name of the app.")]
     public string? Name { get; init; }
