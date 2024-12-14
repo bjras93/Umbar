@@ -64,7 +64,10 @@ public static class PromptHelper
             Func<T, string>? nameConverter = null)
         where T : notnull
     {
-        var selectionPrompt = new MultiSelectionPrompt<T>();
+        var selectionPrompt = new MultiSelectionPrompt<T>()
+        .InstructionsText(
+            "[grey](Press [blue]<space>[/] to toggle, " +
+            "[green]<enter>[/] to accept)[/]");
 
         if (nameConverter != null)
             selectionPrompt.Converter = nameConverter;
@@ -80,7 +83,6 @@ public static class PromptHelper
         {
             selectionPrompt.AddChoices(values);
         }
-
         return await selectionPrompt.ShowAsync(AnsiConsole.Console, CancellationToken.None);
     }
     public static async Task<IEnumerable<T>> MultiSelectionPromptAsync<T>(
